@@ -13,4 +13,26 @@ class Form(models.Model):
         db_table = "skill_forms"
 
     def __str__(self):
-        return f'URL: {self.url} \nForm name: {self.form_name} \n'
+        return f'Form name: {self.form_name} \n'
+
+
+class FilledForm(models.Model):
+    owner_id = models.ForeignKey(User, verbose_name="owner_id", on_delete=models.CASCADE)
+    form_id = models.ForeignKey(Form, default=1, verbose_name="own_forms", on_delete=models.CASCADE)
+    question_list_1 = models.JSONField(default=dict)
+    question_list_2 = models.JSONField(default=dict)
+    question_list_3 = models.JSONField(default=dict)
+    question_list_4 = models.JSONField(default=dict)
+    question_list_5 = models.JSONField(default=dict)
+    question_list_6 = models.JSONField(default=dict)
+    question_list_7 = models.JSONField(default=dict)
+    question_list_8 = models.JSONField(default=dict)
+    question_list_9 = models.JSONField(default=dict)
+    question_list_10 = models.JSONField(default=dict)
+
+    class Meta:
+        db_table = "filled_forms"
+
+    def __str__(self):
+        return f'Owner: {self.owner_id} \n'
+
