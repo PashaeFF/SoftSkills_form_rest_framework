@@ -6,11 +6,9 @@ class InnerSerializer(serializers.Serializer):
     answer_1 = serializers.CharField()
     answer_2 = serializers.CharField()
     answer_3 = serializers.CharField()
-    answer_4 = serializers.CharField()
     answer_1_point = serializers.IntegerField()
     answer_2_point = serializers.IntegerField()
     answer_3_point = serializers.IntegerField()
-    answer_4_point = serializers.IntegerField()
 
 class QuestionSerializer(serializers.Serializer):
     question_1 = InnerSerializer()

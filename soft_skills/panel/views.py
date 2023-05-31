@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
+from .utils.helper import check_values
 
 
 class CreateForm(GenericAPIView):
@@ -16,10 +17,10 @@ class CreateForm(GenericAPIView):
 
     @swagger_auto_schema(operation_id="Creat Skills Form", tags=['Forms'], request_body=FormSerializer)
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+        form = request.data
+        check_value_errors = check_values(form.get("form_name"),form.get("values"))
+        if check_value_errors:
+            return {'error':check_value_errors}
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("message", status=status.HTTP_400_BAD_REQUEST)
     
