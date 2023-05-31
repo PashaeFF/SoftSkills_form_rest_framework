@@ -32,3 +32,10 @@ class FormListSerializer(serializers.Serializer):
 class FormSerializer(serializers.Serializer):
     form_name = serializers.CharField(max_length=300)
     values = FormListSerializer()
+
+
+class FormsAllSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    owner_id = serializers.CharField()
+    form_name = serializers.CharField()
+    created_at = serializers.DateTimeField()
