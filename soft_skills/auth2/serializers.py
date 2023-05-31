@@ -4,7 +4,7 @@ from auth2.models import User
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    email = serializers.CharField(max_length=100)
+    email = serializers.EmailField(max_length=100)
     username = serializers.CharField(max_length=50)
     fullname = serializers.CharField(max_length=150)
     password = serializers.CharField(min_length=6, write_only=True)
@@ -26,3 +26,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         Token.objects.create(user=user)
         return user
+    
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()

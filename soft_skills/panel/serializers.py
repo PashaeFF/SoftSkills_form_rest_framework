@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+
 class InnerSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=500)
     answer_1 = serializers.CharField()
@@ -18,7 +19,7 @@ class QuestionSerializer(serializers.Serializer):
     question_4 = InnerSerializer()
     question_5 = InnerSerializer()
 
-class FormSerializer(serializers.Serializer):
+class FormListSerializer(serializers.Serializer):
     question_list_1 = QuestionSerializer()
     question_list_2 = QuestionSerializer()
     question_list_3 = QuestionSerializer()
@@ -29,4 +30,7 @@ class FormSerializer(serializers.Serializer):
     question_list_8 = QuestionSerializer()
     question_list_9 = QuestionSerializer()
     question_list_10 = QuestionSerializer()
-    
+
+class FormSerializer(serializers.Serializer):
+    form_name = serializers.CharField(max_length=300)
+    values = FormListSerializer()
