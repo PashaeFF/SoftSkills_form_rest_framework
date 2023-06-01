@@ -7,7 +7,7 @@ from .serializers import FormSerializer
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
-from .utils.helper import check_values, check_fill_form_key_and_values
+from .utils.helper import check_values, check_fill_form_key_and_values, add_filled_form
 from .models import Form, FilledForm
 from .serializers import FormsAllSerializer
 from auth2.models import User
@@ -84,30 +84,7 @@ class GetForm(APIView):
                         result = check_fill_form_key_and_values(values)
                         if result:
                             return Response({'error':result}, status=status.HTTP_200_OK)
-                        filled_form_results = {}
-                        for list_num,(key,value) in enumerate(values.items(),1):
-                            name = 'question_list_'+str(list_num)
-                            if name not in filled_form_results.keys():
-                                filled_form_results[name]={'values':{},'point':0}
-                            if key == name:
-                                for n,(key_2,value_2) in enumerate(value.items(),1):
-                                    question_number = 'question_'+str(n)
-                                    if key_2 == question_number:
-                                        filled_form_results[name]['values'].update({question_number:value_2})
-                                        filled_form_results[name]['point'] += form_pk.values[name][question_number][list(value_2.keys())[1]+'_point']    
-                        filled_form = FilledForm.objects.create(owner_id=user,form_id=form_pk,
-                                                  question_list_1=filled_form_results['question_list_1'],
-                                                  question_list_2=filled_form_results['question_list_2'],
-                                                  question_list_3=filled_form_results['question_list_3'],
-                                                  question_list_4=filled_form_results['question_list_4'],
-                                                  question_list_5=filled_form_results['question_list_5'],
-                                                  question_list_6=filled_form_results['question_list_6'],
-                                                  question_list_7=filled_form_results['question_list_7'],
-                                                  question_list_8=filled_form_results['question_list_8'],
-                                                  question_list_9=filled_form_results['question_list_9'],
-                                                  question_list_10=filled_form_results['question_list_10'])
-                        filled_form.save()
-                        return Response({"success":"Form Filled"}, status=status.HTTP_200_OK)
+                        return Response({'success':add_filled_form(user,form_pk,values)}, status=status.HTTP_201_CREATED)
                     return Response({'error':'Something went wrong'}, status=status.HTTP_200_OK)
                 return Response({'error':'Form not found'}, status=status.HTTP_200_OK)
         return Response({'error':'Not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
