@@ -78,6 +78,9 @@ class GetForm(APIView):
             if user:
                 form_pk = Form.objects.filter(id=pk).first()
                 if form_pk:
+                    check_user_fill_form = FilledForm.objects.filter(owner_id=user.id).first()
+                    if check_user_fill_form:
+                        return Response({'error':'You have already filled out this form'}, status=status.HTTP_200_OK)
                     form = request.data
                     if 'values' in form.keys():
                         values = form['values']
@@ -87,4 +90,44 @@ class GetForm(APIView):
                         return Response({'success':add_filled_form(user,form_pk,values)}, status=status.HTTP_201_CREATED)
                     return Response({'error':'Something went wrong'}, status=status.HTTP_200_OK)
                 return Response({'error':'Form not found'}, status=status.HTTP_200_OK)
+        return Response({'error':'Not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+    @swagger_auto_schema(operation_id="Delete Form", tags=['Forms'])
+    def delete(self,request,pk):
+        current_user = request.user.id
+        if current_user:
+            user = User.objects.filter(id=current_user).first()
+            if user:
+                form_pk = Form.objects.filter(id=pk).first()
+                if form_pk:
+                    if form_pk.owner_id==user or user.is_superuser:
+                        form_pk.delete()
+                        return Response({'success':"Form deleted"}, status=status.HTTP_200_OK)
+                    return Response({'error':"You are not allowed to do this"}, status=status.HTTP_200_OK)
+                return Response({'error':'Form not found'}, status=status.HTTP_200_OK)
+        return Response({'error':'Not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class GetFilledForm(GenericAPIView):
+    @swagger_auto_schema(operation_id="Get Filled Form", tags=['Filled Form'])
+    def get(self,request,pk):
+        current_user = request.user.id
+        if current_user:
+            user = User.objects.filter(id=current_user).first()
+            if user:
+                filled_form = FilledForm.objects.filter(owner_id=pk).first()
+                data = {'id':filled_form.id,
+                        'question_list_1':filled_form.question_list_1,
+                        'question_list_2':filled_form.question_list_2,
+                        'question_list_3':filled_form.question_list_3,
+                        'question_list_4':filled_form.question_list_4,
+                        'question_list_5':filled_form.question_list_5,
+                        'question_list_6':filled_form.question_list_6,
+                        'question_list_7':filled_form.question_list_7,
+                        'question_list_8':filled_form.question_list_8,
+                        'question_list_9':filled_form.question_list_9,
+                        'question_list_10':filled_form.question_list_10
+                }
+                return Response(data, status=status.HTTP_200_OK)
         return Response({'error':'Not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
