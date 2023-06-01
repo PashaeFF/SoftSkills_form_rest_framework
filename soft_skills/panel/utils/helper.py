@@ -72,3 +72,14 @@ def add_filled_form(user,form_pk,values):
                                 question_list_10=filled_form_results['question_list_10'])
     filled_form.save()
     return "Completed"
+
+
+def get_user_data(filled_form, data):
+    user_data = {'id':filled_form.id}
+    for key,value in data.items():
+        if key == 'id':
+            continue
+        if key not in user_data.keys():
+            user_data[key] = {}
+        user_data[key].update({'values':value['values']})
+    return user_data

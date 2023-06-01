@@ -7,7 +7,7 @@ from .serializers import FormSerializer
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
-from .utils.helper import check_values, check_fill_form_key_and_values, add_filled_form
+from .utils.helper import check_values, check_fill_form_key_and_values, add_filled_form, get_user_data
 from .models import Form, FilledForm
 from .serializers import FormsAllSerializer
 from auth2.models import User
@@ -118,16 +118,18 @@ class GetFilledForm(GenericAPIView):
             if user:
                 filled_form = FilledForm.objects.filter(owner_id=pk).first()
                 data = {'id':filled_form.id,
-                        'question_list_1':filled_form.question_list_1,
-                        'question_list_2':filled_form.question_list_2,
-                        'question_list_3':filled_form.question_list_3,
-                        'question_list_4':filled_form.question_list_4,
-                        'question_list_5':filled_form.question_list_5,
-                        'question_list_6':filled_form.question_list_6,
-                        'question_list_7':filled_form.question_list_7,
-                        'question_list_8':filled_form.question_list_8,
-                        'question_list_9':filled_form.question_list_9,
-                        'question_list_10':filled_form.question_list_10
-                }
-                return Response(data, status=status.HTTP_200_OK)
+                            'question_list_1':filled_form.question_list_1,
+                            'question_list_2':filled_form.question_list_2,
+                            'question_list_3':filled_form.question_list_3,
+                            'question_list_4':filled_form.question_list_4,
+                            'question_list_5':filled_form.question_list_5,
+                            'question_list_6':filled_form.question_list_6,
+                            'question_list_7':filled_form.question_list_7,
+                            'question_list_8':filled_form.question_list_8,
+                            'question_list_9':filled_form.question_list_9,
+                            'question_list_10':filled_form.question_list_10
+                            }
+                if user.is_superuser or user.company == False:
+                    return Response(data, status=status.HTTP_200_OK)
+                return Response(get_user_data(filled_form,data), status=status.HTTP_200_OK)
         return Response({'error':'Not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
