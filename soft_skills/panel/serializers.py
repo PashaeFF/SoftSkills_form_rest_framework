@@ -2,13 +2,15 @@ from rest_framework import serializers
 
 
 class InnerSerializer(serializers.Serializer):
-    title = serializers.CharField(max_length=500)
+    question = serializers.CharField(max_length=500)
     answer_1 = serializers.CharField()
     answer_2 = serializers.CharField()
     answer_3 = serializers.CharField()
+    answer_4 = serializers.CharField()
     answer_1_point = serializers.IntegerField()
     answer_2_point = serializers.IntegerField()
     answer_3_point = serializers.IntegerField()
+    answer_4_point = serializers.IntegerField()
 
 class QuestionSerializer(serializers.Serializer):
     question_1 = InnerSerializer()

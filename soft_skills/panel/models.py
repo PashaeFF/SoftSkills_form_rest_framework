@@ -29,6 +29,7 @@ class FilledForm(models.Model):
     question_list_8 = models.JSONField(default=dict)
     question_list_9 = models.JSONField(default=dict)
     question_list_10 = models.JSONField(default=dict)
+    created_at = models.DateTimeField(default=now)
 
     class Meta:
         db_table = "filled_forms"
