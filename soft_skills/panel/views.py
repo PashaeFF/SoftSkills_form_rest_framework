@@ -129,6 +129,7 @@ class GetFilledForm(GenericAPIView):
                             'question_list_9':filled_form.question_list_9,
                             'question_list_10':filled_form.question_list_10
                             }
+                print(user.company)
                 if user.is_superuser or user.company == False:
                     return Response(data, status=status.HTTP_200_OK)
                 return Response(get_user_data(filled_form,data), status=status.HTTP_200_OK)
