@@ -130,7 +130,7 @@ class GetFilledForm(GenericAPIView):
                             'question_list_10':filled_form.question_list_10
                             }
                 print(user.company)
-                if user.is_superuser or user.company == False:
+                if user.is_superuser or user.company:
                     return Response(data, status=status.HTTP_200_OK)
                 return Response(get_user_data(filled_form,data), status=status.HTTP_200_OK)
         return Response({'error':'Not authenticated'}, status=status.HTTP_400_BAD_REQUEST)
