@@ -25,6 +25,9 @@ class CreateForm(GenericAPIView):
             if user:
                 if user.is_superuser:
                     form = request.data
+                    check_form = Form.objects.filter(form_name=form.get("form_name")).first()
+                    if check_form:
+                        return {'error':'Form name was existed'}
                     check_value_errors = check_values(form.get("form_name"),form.get("values"))
                     if not check_value_errors:
                         new_form = Form.objects.create(owner_id=user,
