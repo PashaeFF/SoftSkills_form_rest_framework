@@ -71,6 +71,9 @@ class GetForm(APIView):
             if user:
                 form_pk = Form.objects.filter(id=pk).first()
                 if form_pk:
+                    
+                    for form in form_pk.values:
+                        print(form)
                     return Response({'title':form_pk.form_name,
                                 'values':form_pk.values}, status=status.HTTP_200_OK)
                 return Response({'error':'Form not found'}, status=status.HTTP_200_OK)
